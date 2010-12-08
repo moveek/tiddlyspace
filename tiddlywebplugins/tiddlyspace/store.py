@@ -3,13 +3,13 @@ Local overrides and extensions to tiddlywebplugins.mysql
 to provide special optimized functionality.
 """
 
-from tiddlywebplugins.sqlalchemy import (sRecipe, sPolicy,
-        recipe_policy_table)
+from tiddlywebplugins.sqlalchemy import ( Store as SQLStore, 
+        sRecipe, sPolicy, recipe_policy_table)
 from tiddlywebplugins.mysql import Store as MySQLStore
 from tiddlywebplugins.hashmaker import hash_tiddler
 
 
-class Store(MySQLStore):
+class Store(SQLStore):
 
     def user_spaces(self, username):
         """
@@ -31,4 +31,4 @@ class Store(MySQLStore):
         Write a _hash field on the tiddler, then store it.
         """
         hash_tiddler(self.environ, tiddler, overwrite=True)
-        return MySQLStore.tiddler_put(self, tiddler)
+        return SQLStore.tiddler_put(self, tiddler)

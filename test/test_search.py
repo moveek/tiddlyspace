@@ -1,6 +1,8 @@
 """
 Test the search interface.
 """
+import os
+
 from test.fixtures import make_test_env, make_fake_space
 
 from wsgi_intercept import httplib2_intercept
@@ -14,6 +16,7 @@ from tiddlyweb.model.tiddler import Tiddler
 
 def setup_module(module):
     make_test_env(module)
+    os.system('twanager wreindex')
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('cdent.0.0.0.0', 8080, app_fn)

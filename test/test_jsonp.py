@@ -21,6 +21,7 @@ base_url = 'http://0.0.0.0:8080'
 
 def setup_module(module):
     make_test_env(module)
+    os.system('twanager wreindex')
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
     wsgi_intercept.add_wsgi_intercept('foo.0.0.0.0', 8080, app_fn)

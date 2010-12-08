@@ -55,6 +55,7 @@ def init(config):
     import tiddlywebplugins.lazy
     import tiddlywebplugins.privateer
     import tiddlywebplugins.jsonp
+    import tiddlywebplugins.whoosher
 
     @make_command()
     def addmember(args):
@@ -112,6 +113,7 @@ def init(config):
     tiddlywebplugins.lazy.init(config)
     tiddlywebplugins.privateer.init(config)
     tiddlywebplugins.jsonp.init(config)
+    tiddlywebplugins.whoosher.init(config)
 
     # XXX: The following is required to work around issues with twp.instancer.
     # Without this, config settings from tiddlywebwiki take precedence.
