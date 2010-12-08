@@ -29,7 +29,7 @@ config = {
         'dev', 'info', 'api', 'status', 'login', 'frontpage'],
     'cookie_age': '2592000',  # 1 month
     'server_store': ['tiddlywebplugins.tiddlyspace.store', {
-        'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
+        'db_config': 'sqlite:///tiddlyspace.db'}],
     'indexer': 'tiddlywebplugins.mysql',
     'tiddlywebwiki.binary_limit': 1048576,  # 1 MB
     'lazy.titles': ['SiteIcon', 'ColorPalette'],

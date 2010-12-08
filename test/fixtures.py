@@ -14,7 +14,6 @@ from tiddlywebplugins.instancer.util import spawn
 from tiddlywebplugins.tiddlyspace import instance as instance_module
 from tiddlywebplugins.tiddlyspace.config import config as init_config
 
-
 SESSION_COUNT = 1
 
 
@@ -40,6 +39,10 @@ def make_test_env(module):
     except:
         pass
 
+    if SESSION_COUNT == 1:
+    #    instance_module.instance_config['system_plugins'].append('tiddlywebplugins.whooshe')
+        instance_module.instance_config['twanager_plugins'].append('tiddlywebplugins.whoosher')
+
     os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
     if SESSION_COUNT > 1:
         del sys.modules['tiddlywebplugins.tiddlyspace.store']
@@ -54,10 +57,12 @@ def make_test_env(module):
     db_config = db_config.replace('///tiddlyspace?', '///tiddlyspacetest?')
     init_config['server_store'][1]['db_config'] = db_config
     init_config['log_level'] = 'DEBUG'
+    
 
     if sys.path[0] != os.getcwd():
         sys.path.insert(0, os.getcwd())
     spawn('test_instance', init_config, instance_module)
+
 
     from tiddlyweb.web import serve
     module.store = get_store(config)
