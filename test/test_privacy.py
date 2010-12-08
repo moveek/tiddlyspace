@@ -40,7 +40,7 @@ def test_create_spaces():
     assert response['status'] == '201'
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/bags/thing_private/tiddlers/thingone',
+            'http://0.0.0.0:8080/space/thing/bags/thing_private/tiddlers/thingone',
             method='PUT',
             headers={'Content-Type': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % cookie},
@@ -54,7 +54,7 @@ def test_create_spaces():
     assert response['status'] == '201'
 
     response, content = http.request(
-            'http://foo.0.0.0.0:8080/bags/foo_private/tiddlers/thingtwo',
+            'http://0.0.0.0:8080/space/foo/bags/foo_private/tiddlers/thingtwo',
             method='PUT',
             headers={'Content-Type': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % cookie},
@@ -64,33 +64,33 @@ def test_create_spaces():
 
 def test_foo_tiddlers_guest():
     cookie = get_auth('thingone', 'how')
-    response, content = http.request('http://foo.0.0.0.0:8080/',
+    response, content = http.request('http://0.0.0.0:8080/space/foo',
             method='GET',
             headers={'Accept': 'application/json'})
     guest_content = content
 
-    response, content = http.request('http://foo.0.0.0.0:8080/',
+    response, content = http.request('http://0.0.0.0:8080/space/foo',
             headers={'Accept': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % cookie})
     user_content = content
     assert guest_content == user_content
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/bags/thing_private/tiddlers',
+            'http://0.0.0.0:8080/space/thing/bags/thing_private/tiddlers',
             method='GET',
             headers={'Accept': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % cookie})
     thing_content = content
 
     response, content = http.request(
-            'http://foo.0.0.0.0:8080/bags/thing_private/tiddlers',
+            'http://0.0.0.0:8080/space/foo/bags/thing_private/tiddlers',
             method='GET',
             headers={'Accept': 'application/json',
                 'Cookie': 'tiddlyweb_user="%s"' % cookie})
     assert response['status'] == '404'
 
     response, content = http.request(
-            'http://foo.0.0.0.0:8080/bags/thing_private/tiddlers',
+            'http://0.0.0.0:8080/space/foo/bags/thing_private/tiddlers',
             method='GET',
             headers={'Accept': 'application/json',
                 'X-ControlView': 'false',
@@ -98,7 +98,7 @@ def test_foo_tiddlers_guest():
     assert response['status'] == '401'
 
     response, content = http.request(
-            'http://foo.0.0.0.0:8080/bags/thing_private/tiddlers/more',
+            'http://0.0.0.0:8080/space/foo/bags/thing_private/tiddlers/more',
             method='PUT',
             headers={'Content-Type': 'application/json',
                 'X-ControlView': 'false',

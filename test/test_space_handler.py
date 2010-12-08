@@ -24,9 +24,9 @@ from tiddlyweb.model.user import User
 from test.fixtures import make_test_env, make_fake_space, get_auth
 SYSTEM_SPACES = ['system-plugins', 'system-info', 'system-images',
     'system-theme']
-SYSTEM_URLS = ['http://system-plugins.0.0.0.0:8080/',
-    'http://system-info.0.0.0.0:8080/',
-    'http://system-images.0.0.0.0:8080/', 'http://system-theme.0.0.0.0:8080/']
+SYSTEM_URLS = ['http://0.0.0.0:8080/space/system-plugins',
+    'http://0.0.0.0:8080/space/system-info',
+    'http://0.0.0.0:8080/space/system-images', 'http://0.0.0.0:8080/space/system-theme']
 
 
 def setup_module(module):
@@ -63,7 +63,7 @@ def test_spaces_list():
     info = simplejson.loads(content)
     uris = [uri for _, uri in [item.values() for item in info]]
     names = [name for name, _ in [item.values() for item in info]]
-    expected_uris = ['http://0.0.0.0:8080/', 'http://cdent.0.0.0.0:8080/']
+    expected_uris = ['http://0.0.0.0:8080/', 'http://0.0.0.0:8080/space/cdent']
     expected_uris.extend(SYSTEM_URLS)
     expected_names = ['cdent', 'frontpage']
     expected_names.extend(SYSTEM_SPACES)
@@ -77,8 +77,8 @@ def test_spaces_list():
 
     info = simplejson.loads(content)
     uris = [uri for _, uri in [item.values() for item in info]]
-    assert 'http://cdent.0.0.0.0:8080/' in uris
-    assert 'http://fnd.0.0.0.0:8080/' in uris
+    assert 'http://0.0.0.0:8080/space/cdent' in uris
+    assert 'http://0.0.0.0:8080/space/fnd' in uris
 
 
 def test_space_exist():

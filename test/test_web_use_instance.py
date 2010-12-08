@@ -35,7 +35,7 @@ def test_home_page_exist():
 
 def test_space_not_exist():
     http = httplib2.Http()
-    response, content = http.request('http://thing.0.0.0.0:8080/', method='GET')
+    response, content = http.request('http://0.0.0.0:8080/space/thing', method='GET')
 
     assert response['status'] == '404'
 
@@ -43,7 +43,7 @@ def test_space_not_exist():
 def test_space_does_exist():
     make_fake_space(store, 'thing')
     http = httplib2.Http()
-    response, content = http.request('http://thing.0.0.0.0:8080/', method='GET')
+    response, content = http.request('http://0.0.0.0:8080/space/thing', method='GET')
 
     assert response['status'] == '200'
 
@@ -51,14 +51,14 @@ def test_space_does_exist():
 def test_space_has_limited_view():
     make_fake_space(store, 'other')
     http = httplib2.Http()
-    response, content = http.request('http://thing.0.0.0.0:8080/recipes',
+    response, content = http.request('http://0.0.0.0:8080/space/thing/recipes',
             method='GET')
 
     assert response['status'] == '200'
     assert 'other_' not in content, content
     assert 'thing_' in content, content
 
-    response, content = http.request('http://thing.0.0.0.0:8080/bags',
+    response, content = http.request('http://0.0.0.0:8080/space/thing/bags',
             method='GET')
 
     assert response['status'] == '200'
@@ -66,17 +66,17 @@ def test_space_has_limited_view():
     assert 'thing_' in content, content
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/bags/thing_public/tiddlers',
+            'http://0.0.0.0:8080/space/thing/bags/thing_public/tiddlers',
             method='GET')
     assert response['status'] == '200'
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/bags/other_public/tiddlers',
+            'http://0.0.0.0:8080/space/thing/bags/other_public/tiddlers',
             method='GET')
     assert response['status'] == '404', content
 
     response, content = http.request(
-            'http://other.0.0.0.0:8080/bags',
+            'http://0.0.0.0:8080/space/other/bags',
             method='GET')
     assert response['status'] == '200', content
     assert 'other_' in content, content
@@ -90,12 +90,12 @@ def test_space_has_limited_view():
     assert 'thing_' in content, content
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/bags/thing_public/tiddlers',
+            'http://0.0.0.0:8080/space/thing/bags/thing_public/tiddlers',
             method='GET')
     assert response['status'] == '200', content
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/bags/other_public/tiddlers',
+            'http://0.0.0.0:8080/space/thing/bags/other_public/tiddlers',
             method='GET')
     assert response['status'] == '404', content
 
@@ -106,7 +106,7 @@ def test_space_has_limited_view():
     store.put(tiddler2)
 
     response, content = http.request(
-            'http://thing.0.0.0.0:8080/search?q=ohhai',
+            'http://0.0.0.0:8080/space/thing/search?q=ohhai',
             headers={'Accept': 'application/json'},
             method='GET')
     assert response['status'] == '200', content
@@ -116,7 +116,7 @@ def test_space_has_limited_view():
     assert info[0]['title'] == tiddler1.title
 
     response, content = http.request(
-            'http://other.0.0.0.0:8080/search?q=ohhai',
+            'http://0.0.0.0:8080/space/other/search?q=ohhai',
             headers={'Accept': 'application/json'},
             method='GET')
     assert response['status'] == '200', content
@@ -159,7 +159,7 @@ def test_space_not_expose_subscription_recipes():
     store.put(user)
     user_cookie = get_auth('foo', 'foobar')
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes',
             method='GET')
 
     assert response['status'] == '200'
@@ -169,33 +169,33 @@ def test_space_not_expose_subscription_recipes():
     assert 'bar_private' not in content, content
     assert 'baz_' not in content, content
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes/foo_public',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes/foo_public',
             method='GET')
     assert response['status'] == '200'
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes/foo_private',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes/foo_private',
             method='GET',
             headers={
                 'Cookie': 'tiddlyweb_user="%s"' % user_cookie
             })
     assert response['status'] == '200'
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes/bar_public',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes/bar_public',
             method='GET')
     assert response['status'] == '404'
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes/bar_private',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes/bar_private',
             method='GET',
             headers={
                 'Cookie': 'tiddlyweb_user="%s"' % user_cookie
             })
     assert response['status'] == '404'
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes/baz_public',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes/baz_public',
             method='GET')
     assert response['status'] == '404'
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes/baz_private',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes/baz_private',
             method='GET')
     assert response['status'] == '404'
 
@@ -205,20 +205,20 @@ def test_disable_ControlView():
     make_fake_space(store, 'bar')
     http = httplib2.Http()
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes',
             method='GET')
 
     assert 'foo_public' in content, content
     assert 'bar_public' not in content, content
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes',
             headers={'X-ControlView': 'false'},
             method='GET')
 
     assert 'foo_public' in content, content
     assert 'bar_public' in content, content
 
-    response, content = http.request('http://foo.0.0.0.0:8080/recipes',
+    response, content = http.request('http://0.0.0.0:8080/space/foo/recipes',
             headers={'X-ControlView': 'true'},
             method='GET')
 

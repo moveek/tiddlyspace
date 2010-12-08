@@ -33,14 +33,14 @@ def test_space_link():
     store.put(tiddler)
     http = httplib2.Http()
     urls = [
-        ('http://cdent.0.0.0.0:8080/recipes/cdent_public/tiddlers/HouseHold',
+        ('http://0.0.0.0:8080/space/cdent/recipes/cdent_public/tiddlers/HouseHold',
             '"/#%5B%5BHouseHold%5D%5D"'),
-        ('http://cdent.0.0.0.0:8080/bags/cdent_public/tiddlers/HouseHold',
-            '"http://cdent.0.0.0.0:8080/#%5B%5BHouseHold%5D%5D"'),
-        ('http://cdent.0.0.0.0:8080/HouseHold',
+        ('http://0.0.0.0:8080/space/cdent/bags/cdent_public/tiddlers/HouseHold',
+            '"http://0.0.0.0:8080/space/cdent/#%5B%5BHouseHold%5D%5D"'),
+        ('http://0.0.0.0:8080/space/cdent/HouseHold',
             '"/#%5B%5BHouseHold%5D%5D"'),
         ('http://0.0.0.0:8080/bags/cdent_public/tiddlers/HouseHold',
-            '"http://cdent.0.0.0.0:8080/#%5B%5BHouseHold%5D%5D"'),
+            '"http://0.0.0.0:8080/space/cdent/#%5B%5BHouseHold%5D%5D"'),
         ]
     for url, expected in urls:
         response, content = http.request(url, method='GET')

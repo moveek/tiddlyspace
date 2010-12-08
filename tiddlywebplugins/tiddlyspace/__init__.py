@@ -27,6 +27,8 @@ from tiddlywebplugins.tiddlyspace.spaces import (
         add_spaces_routes, change_space_member)
 from tiddlywebplugins.tiddlyspace.csrf import CSRFProtector
 from tiddlywebplugins.prettyerror import PrettyHTTPExceptor
+from tiddlywebplugins.tiddlyspace.singledomain import (ConvertSingleDomain,
+        OutputSingleDomain)
 
 import tiddlywebplugins.status
 
@@ -131,10 +133,15 @@ def init(config):
         config['selector'].add('/users/{username}/identities',
                 GET=get_identities)
 
+        if ConvertSingleDomain not in config['server_request_filters']:
+            config['server_request_filters'].insert(
+                    config['server_request_filters'].
+                    index(UserExtract) + 1, ConvertSingleDomain)
+
         if ControlView not in config['server_request_filters']:
             config['server_request_filters'].insert(
                     config['server_request_filters'].
-                    index(UserExtract) + 1, ControlView)
+                    index(ConvertSingleDomain) + 1, ControlView)
 
         if DropPrivs not in config['server_request_filters']:
             config['server_request_filters'].insert(
@@ -148,6 +155,11 @@ def init(config):
             config['server_response_filters'].insert(
                     config['server_response_filters'].
                     index(PrettyHTTPExceptor) + 1, AllowOrigin)
+
+        if OutputSingleDomain not in config['server_response_filters']:
+            config['server_response_filters'].insert(
+                    config['server_response_filters'].
+                    index(AllowOrigin) + 1, OutputSingleDomain)
 
         new_serializer = ['tiddlywebplugins.tiddlyspace.htmlserialization',
                 'text/html; charset=UTF-8']

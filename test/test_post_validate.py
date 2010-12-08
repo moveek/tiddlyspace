@@ -164,7 +164,7 @@ def test_post_data_form_urlencoded():
     data = 'title=foobar&text=hello%20world'
 
     #test success
-    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_public/tiddlers',
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/bags/foo_public/tiddlers',
         method='POST',
         headers={
             'Content-type': 'application/x-www-form-urlencoded',
@@ -214,7 +214,7 @@ Hello World
 ---------------------------168072824752491622650073--'''
 
     #test success
-    uri = 'http://foo.0.0.0.0:8080/bags/foo_public/tiddlers?%s' % csrf_token
+    uri = 'http://0.0.0.0:8080/space/foo/bags/foo_public/tiddlers?%s' % csrf_token
     response, content = http.request(uri,
         method='POST',
         headers={
@@ -228,7 +228,7 @@ Hello World
     assert response['status'] == '204'
 
     #test failure
-    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_public/tiddlers',
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/bags/foo_public/tiddlers',
         method='POST',
         headers={
             'Content-Type': 'multipart/form-data; ' \
@@ -261,7 +261,7 @@ def test_nonce_not_left_over():
     data = 'title=foobar&text=hello%20world&extra_field=baz'
 
     #test success
-    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_public/tiddlers',
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/bags/foo_public/tiddlers',
         method='POST',
         headers={
             'Content-type': 'application/x-www-form-urlencoded',
@@ -293,7 +293,7 @@ def test_cookie_set():
 
     user_cookie = get_auth('foo', 'foobar')
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/status',
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"' % user_cookie
@@ -334,7 +334,7 @@ def test_no_cookie_sent():
     cookie = 'csrf_token=%s:%s' % (time, sha('%s:%s:%s:%s' % (user.usersign,
         time, space, config['secret'])).hexdigest())
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/status',
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, cookie)
@@ -361,7 +361,7 @@ def test_invalid_cookie():
     cookie = 'csrf_token=%s:%s' % (time, sha('%s:%s:%s:%s' % (user.usersign,
         time, space, config['secret'])).hexdigest())
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/status',
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, cookie)
@@ -370,7 +370,7 @@ def test_invalid_cookie():
     assert 'csrf_token' in response['set-cookie']
 
     cookie = 'csrf_token=adiudh9389wefnf98'
-    response, _ = http.request('http://foo.0.0.0.0:8080/status',
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/status',
         method='GET',
         headers={
             'Cookie': 'tiddlyweb_user="%s"; %s' % (user_cookie, cookie)

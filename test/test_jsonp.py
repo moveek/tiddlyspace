@@ -49,7 +49,7 @@ def test_call_jsonp():
 
     user_cookie = get_auth('foo', 'foobar')
     callback = 'callback'
-    response, content = http.request('http://foo.0.0.0.0:8080/bags/'
+    response, content = http.request('http://0.0.0.0:8080/space/foo/bags/'
         'foo_public/tiddlers/public?callback=%s' % callback,
         method='GET',
         headers={
@@ -85,7 +85,7 @@ def test_drop_privs():
     user_cookie = get_auth('foo', 'foobar')
     callback = 'callback'
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/bags/'
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/bags/'
         'foo_private/tiddlers/private?callback=%s' % callback,
         method='GET',
         headers={
@@ -94,7 +94,7 @@ def test_drop_privs():
         })
     assert response['status'] == '401'
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/recipes/'
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/recipes/'
         'foo_private/tiddlers/private?callback=%s' % callback,
         method='GET',
         headers={
@@ -103,7 +103,7 @@ def test_drop_privs():
         })
     assert response['status'] == '401'
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_private?'
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/bags/foo_private?'
         'callback=%s' % callback,
         method='GET',
         headers={
@@ -112,7 +112,7 @@ def test_drop_privs():
         })
     assert response['status'] == '401'
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/recipes/foo_private?'
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/recipes/foo_private?'
         'callback=%s' % callback,
         method='GET',
         headers={
@@ -121,7 +121,7 @@ def test_drop_privs():
         })
     assert response['status'] == '401'
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/bags/foo_private/'
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/bags/foo_private/'
         'tiddlers?callback=%s' % callback,
         method='GET',
         headers={
@@ -130,7 +130,7 @@ def test_drop_privs():
         })
     assert response['status'] == '401'
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/recipes/foo_private/'
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/recipes/foo_private/'
         'tiddlers?callback=%s' % callback,
         method='GET',
         headers={
@@ -139,7 +139,7 @@ def test_drop_privs():
         })
     assert response['status'] == '401'
 
-    response, _ = http.request('http://foo.0.0.0.0:8080/bags/'
+    response, _ = http.request('http://0.0.0.0:8080/space/foo/bags/'
         'foo_private/tiddlers/private',
         method='GET',
         headers={
