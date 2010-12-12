@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceConfig|
-|''Version''|0.7.1|
+|''Version''|0.7.3|
 |''Description''|TiddlySpace configuration|
 |''Status''|stable|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/raw/master/src/plugins/TiddlySpaceConfig.js|
@@ -130,6 +130,10 @@ var plugin = config.extensions.tiddlyspace = {
 	// returns the URL based on a server_host object (scheme, host, port) and an
 	// optional subdomain
 	getHost: function(host, subdomain) {
+		if(host === undefined) { // offline
+			tweb.status.server_host = {}; // prevents exceptions further down the stack -- XXX: hacky workaround, breaks encapsulation
+			return null;
+		}
 		subdomain = subdomain ? subdomain + "." : "";
 		var url = "%0://%1%2".format(host.scheme, subdomain, host.host);
 		var port = host.port;
@@ -176,7 +180,11 @@ tweb.getStatus(function(status) {
 	config.messages.tsVersion = status.version;
 });
 
-if(window.location.protocol != "file:") {
+if(window.location.protocol == "file:") {
+	// enable AutoSave by default
+	config.options.chkAutoSave = config.options.chkAutoSave === undefined ?
+		true : config.options.chkAutoSave;
+} else {
 	// set global read-only mode based on membership heuristics
 	var indicator = store.getTiddler("SiteTitle") || tiddler;
 	readOnly = !(recipe.split("_").pop() == "private" ||
@@ -253,6 +261,7 @@ store.addNotification("StyleSheetBackstage", refreshStyles);
 config.optionsDesc.chkPrivateMode = "Set your default privacy mode to private";
 config.optionsSource.chkPrivateMode = "setting";
 config.options.chkPrivateMode = config.options.chkPrivateMode || false;
+saveSystemSetting("chkPrivateMode", false);
 config.defaultCustomFields["server.workspace"] = plugin.
 	getCurrentWorkspace(config.options.chkPrivateMode ? "private" : "public");
 

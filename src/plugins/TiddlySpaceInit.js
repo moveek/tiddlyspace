@@ -1,6 +1,6 @@
 /***
 |''Name''|TiddlySpaceInitialization|
-|''Version''|0.6.9|
+|''Version''|0.7.0|
 |''Description''|Initializes new TiddlySpaces the first time they are created|
 |''Status''|@@beta@@|
 |''Source''|http://github.com/TiddlySpace/tiddlyspace/blob/master/src/plugins/TiddlySpaceInit.js|
@@ -25,7 +25,7 @@ var tiddlyspace = config.extensions.tiddlyspace;
 var currentSpace = tiddlyspace.currentSpace;
 
 var plugin = config.extensions.TiddlySpaceInit = {
-	version: "0.5",
+	version: "0.6",
 	SiteTitle: "%0",
 	SiteSubtitle: "a TiddlySpace",
 	flagTitle: "%0SetupFlag",
@@ -61,29 +61,18 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		}
 		autoSaveChanges(null, tiddlers);
 	},
-	setupMarkupPreHead: function() {
-		var pubWorkspace = tiddlyspace.getCurrentWorkspace("public");
-		var existing = store.getTiddler("MarkupPreHead");
-		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
-			var tid = new Tiddler("MarkupPreHead");
-			tid.text = markupPreHead.format(currentSpace.name);
-			tid.tags = ["excludeLists"];
-			tid.fields = $.extend({}, config.defaultCustomFields);
-			tid.fields["server.workspace"] = pubWorkspace;
-			tid.fields["server.page.revision"] = "false";
-			tid = store.saveTiddler(tid);
-			autoSaveChanges(null, [tid]);
-		}
-	},
 	update: function(curVersion, flagTiddler) {
 		if(curVersion < 0.2) {
 			this.createAvatar();
 		}
 		if(curVersion < 0.3) {
-			flagTiddler.tags.pushUnique("excludePublisher");
+			flagTiddler.tags.pushUnique("excludePublisher"); // XXX: never persisted
 		}
 		if(curVersion < 0.5) { // v0.4 was faulty
 			this.setupMarkupPreHead();
+		}
+		if(curVersion < 0.6) {
+			this.purgeSystemSettings();
 		}
 	},
 	firstRun: function() {
@@ -111,6 +100,19 @@ var plugin = config.extensions.TiddlySpaceInit = {
 		this.createAvatar();
 		this.setupMarkupPreHead();
 		return tiddlers;
+	},
+	// remove _cookie slices (TiddlyWiki 2.6.2 beta 6 remnants)
+	purgeSystemSettings: function() {
+		var ss = store.getTiddler("SystemSettings");
+		if(ss) {
+			var lines = ss.text.split("\n");
+			var persistentOptions = $.grep(lines, function(line, i) {
+				return line.indexOf("_cookie:") == -1;
+			});
+			ss.text = persistentOptions.join("\n");
+			ss = store.saveTiddler(ss);
+			autoSaveChanges(null, [ss]);
+		}
 	},
 	createAvatar: function() {
 		var avatar = "SiteIcon";
@@ -157,6 +159,20 @@ var plugin = config.extensions.TiddlySpaceInit = {
 			});
 		};
 		tid.get(callback, errback);
+	},
+	setupMarkupPreHead: function() {
+		var pubWorkspace = tiddlyspace.getCurrentWorkspace("public");
+		var existing = store.getTiddler("MarkupPreHead");
+		if(!existing || existing.fields["server.workspace"] != pubWorkspace) {
+			var tid = new Tiddler("MarkupPreHead");
+			tid.text = markupPreHead.format(currentSpace.name);
+			tid.tags = ["excludeLists"];
+			tid.fields = $.extend({}, config.defaultCustomFields);
+			tid.fields["server.workspace"] = pubWorkspace;
+			tid.fields["server.page.revision"] = "false";
+			tid = store.saveTiddler(tid);
+			autoSaveChanges(null, [tid]);
+		}
 	}
 };
 
