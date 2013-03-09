@@ -29,9 +29,9 @@ from tiddlywebplugins.tiddlyspace.spaces import _update_policy, _make_policy
 from test.fixtures import make_test_env, make_fake_space, get_auth
 SYSTEM_SPACES = ['system-plugins', 'system-info', 'system-images',
     'system-theme', 'system-applications']
-SYSTEM_URLS = ['http://system-plugins.0.0.0.0:8080/',
-    'http://system-info.0.0.0.0:8080/', 'http://system-applications.0.0.0.0:8080/',
-    'http://system-images.0.0.0.0:8080/', 'http://system-theme.0.0.0.0:8080/']
+SYSTEM_URLS = ['http://0.0.0.0:8080/space/system-plugins',
+    'http://0.0.0.0:8080/space/system-info', 'http://0.0.0.0:8080/space/system-applications',
+    'http://0.0.0.0:8080/space/system-images', 'http://0.0.0.0:8080/space/system-theme']
 
 
 def setup_module(module):
@@ -64,7 +64,7 @@ def test_spaces_list():
     info = simplejson.loads(content)
     uris = [uri for _, uri in [item.values() for item in info]]
     names = [name for name, _ in [item.values() for item in info]]
-    expected_uris = ['http://0.0.0.0:8080/', 'http://cdent.0.0.0.0:8080/']
+    expected_uris = ['http://0.0.0.0:8080/', 'http://0.0.0.0:8080/space/cdent']
     expected_uris.extend(SYSTEM_URLS)
     expected_names = ['cdent', 'frontpage']
     expected_names.extend(SYSTEM_SPACES)
@@ -78,8 +78,8 @@ def test_spaces_list():
 
     info = simplejson.loads(content)
     uris = [uri for _, uri in [item.values() for item in info]]
-    assert 'http://cdent.0.0.0.0:8080/' in uris
-    assert 'http://fnd.0.0.0.0:8080/' in uris
+    assert 'http://0.0.0.0:8080/space/cdent' in uris
+    assert 'http://0.0.0.0:8080/space/fnd' in uris
 
 
 def test_space_exist():
@@ -147,13 +147,13 @@ def test_create_space():
     info = simplejson.loads(content)
     assert info == ['cdent'], content
 
-    response, content = http.request('http://extra.0.0.0.0:8080/bags/extra_public/tiddlers/SiteInfo.json')
+    response, content = http.request('http://0.0.0.0:8080/space/extra/bags/extra_public/tiddlers/SiteInfo.json')
     assert response['status'] == '200'
     info = simplejson.loads(content)
     assert 'Space extra' in info['text']
 
     response, content = http.request(
-            'http://extra.0.0.0.0:8080/GettingStarted.json')
+            'http://0.0.0.0:8080/space/extra/GettingStarted.json')
     assert response['status'] == '200'
     info = simplejson.loads(content)
     assert info['bag'] == 'extra_public'
@@ -275,7 +275,7 @@ def test_add_a_member():
             )
     assert response['status'] == '403', content
 
-    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/fnd',
+    response, content = http.request('http://0.0.0.0:8080/space/extra/spaces/extra/members/fnd',
             method='PUT',
             )
     assert response['status'] == '403', content
@@ -286,7 +286,7 @@ def test_add_a_member():
             )
     assert response['status'] == '403'
 
-    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/fnd',
+    response, content = http.request('http://0.0.0.0:8080/space/extra/spaces/extra/members/fnd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='PUT',
             )
@@ -335,14 +335,14 @@ def test_add_a_member():
     assert response['status'] == '403'
 
     cookie = get_auth('fnd', 'bird')
-    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/psd',
+    response, content = http.request('http://0.0.0.0:8080/space/extra/spaces/extra/members/psd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='PUT',
             )
     assert response['status'] == '204'
 
     cookie = get_auth('fnd', 'bird')
-    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/mary',
+    response, content = http.request('http://0.0.0.0:8080/space/extra/spaces/extra/members/mary',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='PUT',
             )
@@ -367,7 +367,7 @@ def test_delete_member():
             )
     assert response['status'] == '403'
 
-    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/psd',
+    response, content = http.request('http://0.0.0.0:8080/space/extra/spaces/extra/members/psd',
             method='DELETE',
             )
     assert response['status'] == '403'
@@ -378,14 +378,14 @@ def test_delete_member():
             )
     assert response['status'] == '403'
 
-    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/psd',
+    response, content = http.request('http://0.0.0.0:8080/space/extra/spaces/extra/members/psd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='DELETE',
             )
     assert response['status'] == '204'
 
     # delete self
-    response, content = http.request('http://extra.0.0.0.0:8080/spaces/extra/members/fnd',
+    response, content = http.request('http://0.0.0.0:8080/space/extra/spaces/extra/members/fnd',
             headers={'Cookie': 'tiddlyweb_user="%s"' % cookie},
             method='DELETE',
             )

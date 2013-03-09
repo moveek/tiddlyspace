@@ -38,7 +38,7 @@ def test_mapspace_bag_correct():
 
 def test_mapspace_validator():
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/bags/MAPSPACE/tiddlers/foo.example.com',
+            'http://0.0.0.0:8080/space/cdent/bags/MAPSPACE/tiddlers/foo.example.com',
             method='PUT',
             headers={'Content-Type': 'application/json'},
             body='{"text": ""}')
@@ -48,7 +48,7 @@ def test_mapspace_validator():
 
     # can create with user
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/bags/MAPSPACE/tiddlers/foo.example.com',
+            'http://0.0.0.0:8080/space/cdent/bags/MAPSPACE/tiddlers/foo.example.com',
             method='PUT',
             headers={'Content-Type': 'application/json',
                 'Authorization': 'Basic %s' % auth},
@@ -58,7 +58,7 @@ def test_mapspace_validator():
 
     # cannot write even with user
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/bags/MAPSPACE/tiddlers/foo.example.com',
+            'http://0.0.0.0:8080/space/cdent/bags/MAPSPACE/tiddlers/foo.example.com',
             method='PUT',
             headers={'Content-Type': 'application/json',
                 'Authorization': 'Basic %s' % auth},
@@ -72,7 +72,7 @@ def test_mapspace_validator():
 
 def test_mapspace_non_member():
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/bags/MAPSPACE/tiddlers/bar.example.com',
+            'http://0.0.0.0:8080/space/cdent/bags/MAPSPACE/tiddlers/bar.example.com',
             method='PUT',
             headers={'Content-Type': 'application/json',
                 'Authorization': 'Basic %s' % badauth},
@@ -83,7 +83,7 @@ def test_mapspace_non_member():
 
 def test_mapspace_twice():
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/bags/MAPSPACE/tiddlers/bar.example.com',
+            'http://0.0.0.0:8080/space/cdent/bags/MAPSPACE/tiddlers/bar.example.com',
             method='PUT',
             headers={'Content-Type': 'application/json',
                 'Authorization': 'Basic %s' % auth},
@@ -95,7 +95,7 @@ def test_mapspace_twice():
     assert tiddler.fields['mapped_space'] == 'cdent'
 
 def test_mapspace_maps():
-    response, content = http.request('http://cdent.0.0.0.0:8080/bags.json')
+    response, content = http.request('http://0.0.0.0:8080/space/cdent/bags.json')
 
     assert response['status'] == '200', content
     info = simplejson.loads(content)

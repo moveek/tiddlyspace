@@ -29,6 +29,8 @@ def setup_module(module):
     httplib2_intercept.install()
     wsgi_intercept.add_wsgi_intercept('0.0.0.0', 8080, app_fn)
 
+    print "##### current dir: " + os.getcwd()
+
     module.http = httplib2.Http()
     TESTS = yaml.load(open('test/httptest.yaml'))
 
