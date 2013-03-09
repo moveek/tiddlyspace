@@ -11,6 +11,7 @@ import logging
 from tiddlyweb.util import read_utf8_file
 
 from tiddlywebwiki.serialization import Serialization as WikiSerialization
+from tiddlywebplugins.tiddlyspace.web import determine_space
 
 
 LOGGER = logging.getLogger(__name__)
@@ -78,3 +79,12 @@ class Serialization(WikiSerialization):
             wiki = wiki.replace(tag, '<script type="text/javascript" '
                 'src="/bags/common/tiddlers/backstage.js"></script> %s' % tag)
         return wiki
+
+
+    def _tiddler_as_div(self, tiddler):
+        http_host = self.environ['HTTP_HOST']
+        space = determine_space(self.environ, http_host) 
+        if space:
+            _, self.environ['HTTP_HOST'] = http_host.split('.', 1)
+        return WikiSerialization._tiddler_as_div(self, tiddler)
+    
