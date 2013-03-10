@@ -46,19 +46,19 @@ def make_test_env(module, hsearch=False):
     except:
         pass
 
-    os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
+    #os.system('mysqladmin -f drop tiddlyspacetest create tiddlyspacetest')
     if SESSION_COUNT > 1:
-        del sys.modules['tiddlywebplugins.tiddlyspace.store']
-        del sys.modules['tiddlywebplugins.mysql3']
-        del sys.modules['tiddlywebplugins.sqlalchemy3']
-        import tiddlywebplugins.tiddlyspace.store
-        import tiddlywebplugins.mysql3
-        import tiddlywebplugins.sqlalchemy3
+    #    del sys.modules['tiddlywebplugins.tiddlyspace.store']
+    #    del sys.modules['tiddlywebplugins.mysql3']
+    #    del sys.modules['tiddlywebplugins.sqlalchemy3']
+    #    import tiddlywebplugins.tiddlyspace.store
+    #    import tiddlywebplugins.mysql3
+    #    import tiddlywebplugins.sqlalchemy3
         clear_hooks(HOOKS)
     SESSION_COUNT += 1
-    db_config = init_config['server_store'][1]['db_config']
-    db_config = db_config.replace('///tiddlyspace?', '///tiddlyspacetest?')
-    init_config['server_store'][1]['db_config'] = db_config
+    #db_config = init_config['server_store'][1]['db_config']
+    #db_config = db_config.replace('///tiddlyspace?', '///tiddlyspacetest?')
+    #init_config['server_store'][1]['db_config'] = db_config
     init_config['log_level'] = 'DEBUG'
 
     if sys.path[0] != os.getcwd():

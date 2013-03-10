@@ -34,8 +34,9 @@ config = {
     'socialusers.reserved_names': ['www', 'about', 'announcements',
         'dev', 'info', 'api', 'status', 'login', 'frontpage'],
     'cookie_age': '2592000',  # 1 month
-    'server_store': ['tiddlywebplugins.tiddlyspace.store', {
-        'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
+    #'server_store': ['tiddlywebplugins.tiddlyspace.store', {
+    #    'db_config': 'mysql:///tiddlyspace?charset=utf8&use_unicode=0'}],
+    #'server_store': ['text', {'store_root': 'test_instance/store'}],
     'tiddlywebwiki.binary_limit': 1048576,  # 1 MB
     # TiddlyWiki external, alpha, beta serialization
     'base_tiddlywiki_beta': TIDDLYWIKI_BETA,
