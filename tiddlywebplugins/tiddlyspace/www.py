@@ -17,7 +17,8 @@ from tiddlywebplugins.tiddlyspace.profiles import add_profile_routes
 from tiddlywebplugins.tiddlyspace.repudiator import RepudiatorController
 from tiddlywebplugins.tiddlyspace.safemode import safe_mode
 from tiddlywebplugins.tiddlyspace.spaces import add_spaces_routes
-
+from tiddlywebplugins.tiddlyspace.singledomain import (ConvertSingleDomain,
+	OutputSingleDomain)
 
 def establish_www(config):
     """
@@ -32,10 +33,15 @@ def establish_www(config):
     config['selector'].add('/tiddlers[.{format}]', GET=get_space_tiddlers)
     config['selector'].add('/{tiddler_name:segment}', GET=friendly_uri)
 
+    if ConvertSingleDomain not in config['server_request_filters']:
+        config['server_request_filters'].insert(
+                config['server_request_filters'].
+                index(Negotiate) + 1, ConvertSingleDomain)
+
     if ControlView not in config['server_request_filters']:
         config['server_request_filters'].insert(
                 config['server_request_filters'].
-                index(Negotiate) + 1, ControlView)
+                index(ConvertSingleDomain) + 1, ControlView)
 
     if DropPrivs not in config['server_request_filters']:
         config['server_request_filters'].insert(
@@ -57,3 +63,9 @@ def establish_www(config):
         config['server_response_filters'].insert(
                 config['server_response_filters'].
                 index(PrettyHTTPExceptor) + 1, RepudiatorController)
+
+    if OutputSingleDomain not in config['server_response_filters']:
+        config['server_response_filters'].insert(
+                config['server_response_filters'].
+                index(AllowOrigin) + 1, OutputSingleDomain)
+
