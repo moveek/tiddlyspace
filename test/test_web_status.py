@@ -27,7 +27,7 @@ def setup_module(module):
 
 
 def test_status_unclaimed_space():
-    response, content = http.request('http://unclaimed-space.0.0.0.0:8080/status')
+    response, content = http.request('http://0.0.0.0:8080/space/unclaimed-space/status')
     assert response['status'] == '200'
     info = simplejson.loads(content)
 
@@ -49,7 +49,7 @@ def test_status_base():
     assert 'space' not in info
 
 def test_status_space():
-    response, content = http.request('http://thing.0.0.0.0:8080/status')
+    response, content = http.request('http://0.0.0.0:8080/space/thing/status')
     assert response['status'] == '200'
     info = simplejson.loads(content)
 
@@ -77,7 +77,7 @@ def test_status_base_auth():
 
 def test_status_space_auth():
     user_cookie = get_auth('foo', 'foobar')
-    response, content = http.request('http://thing.0.0.0.0:8080/status',
+    response, content = http.request('http://0.0.0.0:8080/space/thing/status',
             headers={'Cookie': 'tiddlyweb_user="%s"' % user_cookie})
 
     assert response['status'] == '200'

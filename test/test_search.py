@@ -116,12 +116,12 @@ def test_search_no_args():
     allinfo = simplejson.loads(content)
     assert len(allinfo) == 165
 
-    response, content = http.request('http://fnd.0.0.0.0:8080/search.json')
+    response, content = http.request('http://0.0.0.0:8080/space/fnd/search.json')
     assert response['status'] == '200'
     fndinfo = simplejson.loads(content)
     assert len(fndinfo) == 20
 
-    response, content = http.request('http://fnd.0.0.0.0:8080/search.json?q=_limit:999')
+    response, content = http.request('http://0.0.0.0:8080/space/fnd/search.json?q=_limit:999')
     assert response['status'] == '200'
     fndinfo = simplejson.loads(content)
     assert len(fndinfo) == 144
@@ -146,12 +146,12 @@ def test_search_html():
 
     assert response['status'] == '200', content
 
-    assert 'http://fnd.0.0.0.0:8080/One%20Two' in content
-    assert 'http://cdent.0.0.0.0:8080/three%20two%20one' in content
+    assert 'http://0.0.0.0:8080/space/fnd/One%20Two' in content
+    assert 'http://0.0.0.0:8080/space/cdent/three%20two%20one' in content
 
-    assert '<a class="space" href="http://fnd.0.0.0.0:8080/">' in content
+    assert '<a class="space" href="http://0.0.0.0:8080/space/fnd/">' in content
 
-    assert '<img alt="space icon" src="http://fnd.0.0.0.0:8080/SiteIcon"/>' in content
+    assert '<img alt="space icon" src="http://0.0.0.0:8080/space/fnd/SiteIcon"/>' in content
 
     tiddler = store.get(Tiddler('One Two', 'fnd_public'))
     tiddler.modifier = 'cowboy'
@@ -159,8 +159,8 @@ def test_search_html():
 
     response, content = http.request('http://0.0.0.0:8080/search?q=monkeys')
     assert response['status'] == '200', content
-    assert '<a class="modifier" href="http://fnd.0.0.0.0:8080/">' not in content
-    assert '<a class="modifier" href="http://cowboy.0.0.0.0:8080/">' in content
+    assert '<a class="modifier" href="http://0.0.0.0:8080/space/fnd/">' not in content
+    assert '<a class="modifier" href="http://0.0.0.0:8080/space/cowboy/">' in content
     # tiddlers that do not come from a space should show the default tiddlyspace site icon.
     tiddler = Tiddler('commoner', 'common')
     tiddler.text = 'I want to live like common people.'

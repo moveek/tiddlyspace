@@ -28,13 +28,13 @@ def test_friendly():
     store.put(tiddler)
     http = httplib2.Http()
     response, content_core = http.request(
-            'http://cdent.0.0.0.0:8080/recipes/cdent_public/tiddlers/HouseHold',
+            'http://0.0.0.0:8080/space/cdent/recipes/cdent_public/tiddlers/HouseHold',
             method='GET')
         
     assert response['status'] == '200', content_core
 
     response, content_friendly = http.request(
-            'http://cdent.0.0.0.0:8080/HouseHold',
+            'http://0.0.0.0:8080/space/cdent/HouseHold',
             method='GET')
     assert response['status'] == '200', content_friendly
     assert 'text/html' in response['content-type']
@@ -51,7 +51,7 @@ def test_friendly_encoded():
     store.put(tiddler)
     http = httplib2.Http()
     response, content_friendly = http.request(
-            'http://cdent.0.0.0.0:8080/House%20Hold',
+            'http://0.0.0.0:8080/space/cdent/House%20Hold',
             method='GET')
     assert response['status'] == '200', content_friendly
     assert 'text/html' in response['content-type']
@@ -64,7 +64,7 @@ def test_markdown_support():
     store.put(tiddler)
     http = httplib2.Http()
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/Markdown%20Test',
+            'http://0.0.0.0:8080/space/cdent/Markdown%20Test',
             method='GET')
     assert response['status'] == '200', content
     assert 'text/html' in response['content-type']
@@ -76,7 +76,7 @@ def test_tiddlywikitext_support():
     store.put(tiddler)
     http = httplib2.Http()
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/TiddlyWiki%20Test',
+            'http://0.0.0.0:8080/space/cdent/TiddlyWiki%20Test',
             method='GET')
     assert response['status'] == '200', content
     assert 'text/html' in response['content-type']
@@ -89,7 +89,7 @@ def test_tiddlywikitext_support():
     store.put(tiddler)
     http = httplib2.Http()
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/TiddlyWiki%20Test',
+            'http://0.0.0.0:8080/space/cdent/TiddlyWiki%20Test',
             method='GET')
     assert response['status'] == '200', content
     assert 'text/html' in response['content-type']
@@ -98,13 +98,13 @@ def test_tiddlywikitext_support():
 def test_root_tiddlers():
     http = httplib2.Http()
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/tiddlers.wiki',
+            'http://0.0.0.0:8080/space/cdent/tiddlers.wiki',
             method='GET')
     assert response['status'] == '200', content
     assert 'Jeremy Ruston' in content
 
     response, content = http.request(
-            'http://cdent.0.0.0.0:8080/tiddlers',
+            'http://0.0.0.0:8080/space/cdent/tiddlers',
             method='GET')
     assert response['status'] == '200', content
     assert '/HouseHold">HouseHold' in content, content

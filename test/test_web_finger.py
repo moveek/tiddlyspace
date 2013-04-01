@@ -28,7 +28,7 @@ def test_for_meta():
     assert response['status'] == '200'
     assert 'rel="lrdd" template="http://0.0.0.0:8080/webfinger?q={uri}"' in content
 
-    response, content = http.request('http://cdent.0.0.0.0:8080/.well-known/host-meta')
+    response, content = http.request('http://0.0.0.0:8080/space/cdent/.well-known/host-meta')
     assert response['status'] == '404'
     assert 'No host-meta at this host:' in content
 
@@ -44,7 +44,7 @@ def test_get_webfinger():
     assert 'href="http://0.0.0.0:8080/profiles/cdent"' in content
     assert 'href="http://0.0.0.0:8080/profiles/cdent.atom"' in content
 
-    response, content = http.request('http://cdent.0.0.0.0:8080/webfinger?q=cdent@0.0.0.0:8080')
+    response, content = http.request('http://0.0.0.0:8080/space/cdent/webfinger?q=cdent@0.0.0.0:8080')
     assert response['status'] == '404'
     assert 'No webfinger at this host:' in content
 
@@ -70,7 +70,7 @@ def test_get_profile_html():
     assert 'Hello There' in content
     assert '/cdent_public/tiddlers/profile' in content
 
-    response, content = http.request('http://cdent.0.0.0.0:8080/profiles/cdent')
+    response, content = http.request('http://0.0.0.0:8080/space/cdent/profiles/cdent')
     assert response['status'] == '404', content
     assert 'No profiles at this host' in content
 
@@ -84,14 +84,14 @@ def test_get_profile_atom():
     assert response['status'] == '200'
 
     assert 'Hello There' in content
-    assert 'href="http://cdent.0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
+    assert 'href="http://0.0.0.0:8080/space/cdent/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
 
 def test_get_profile_atom_format():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent.atom')
     assert response['status'] == '200'
 
     assert 'Hello There' in content
-    assert 'href="http://cdent.0.0.0.0:8080/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
+    assert 'href="http://0.0.0.0:8080/space/cdent/bags/cdent_public/tiddlers/profile" rel="alternate"' in content
 
 def test_get_profile_json():
     response, content = http.request('http://0.0.0.0:8080/profiles/cdent',
@@ -104,6 +104,6 @@ def test_vcard():
 
     assert '<h1 id="hcard-cdent" class="vcard"' in content
     assert 'src="/recipes/cdent_public/tiddlers/SiteIcon" alt="avatar" class="photo"' in content
-    assert '<a href="http://cdent.0.0.0.0:8080/" class="fn url">cdent</a>' in content
+    assert '<a href="http://0.0.0.0:8080/space/cdent/" class="fn url">cdent</a>' in content
 
 
